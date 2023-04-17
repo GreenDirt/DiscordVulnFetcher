@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import discord
 from datetime import datetime
 from discord_formatter import DiscordFormatter
