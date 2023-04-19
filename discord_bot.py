@@ -40,10 +40,24 @@ class DiscordBot(discord.Client):
 		if not channel:
 			self.errors_to_display.append(f"Channel '{channel_name}' not found")
 			return None
-
-		await channel.send(f"*Failles {risk} du {self.yesterday}*\n")
 		
-		threats_by_product = self.full_responses[risk]
+		if not risk in self.full_responses.keys():
+			print(f"Risk level not found {risk}")
+
+		try:
+			threats_by_product = self.full_responses[risk]
+		except KeyError:
+			print("No threat today")
+			return
+
+		no_threat = True
+		for product in threats_by_product.keys():
+			for threat in threats_by_product[product]:
+				no_threat = False
+		if no_threat:
+			return
+
+		await channel.send(f"```diff\n- Failles {risk} du {self.yesterday}```\n")
 
 		for product in threats_by_product.keys():
 			await channel.send(product + " : \n")
@@ -59,8 +73,3 @@ class DiscordBot(discord.Client):
 			self.errors_to_display = []
 		else:
 			print("Error : Error channel don't exists")
-
-
-		
-
-
