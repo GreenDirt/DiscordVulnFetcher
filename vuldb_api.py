@@ -17,7 +17,7 @@ class VuldbApi:
 
 		postData = {}
 		postData['details'] = int(details)
-		postData['advisory_date'] = date
+		postData['advisory_date'] = str(date.strftime("%F").replace('-', ''))
 
 		# Get API response
 		response = requests.post(url, headers=self.headers, data=postData)

@@ -2,6 +2,7 @@
 
 import discord
 from datetime import datetime
+from datetime import timedelta
 from discord_formatter import DiscordFormatter
 from config import *
 
@@ -14,7 +15,7 @@ class DiscordBot(discord.Client):
 		print(f"Logged on as {self.user}")
 		self.errors_to_display = []
 		self.error_channel = None
-		self.yesterday = str(int(datetime.now().strftime("%F").replace('-', ''))-1)
+		self.yesterday = datetime.today()-timedelta(days=1)
 
 		for channel in self.get_all_channels():
 			if channel.name == ERROR_CHANNEL_NAME:
@@ -57,7 +58,7 @@ class DiscordBot(discord.Client):
 		if no_threat:
 			return
 
-		await channel.send(f"```diff\n- Failles {risk} du {self.yesterday}```\n")
+		await channel.send(f"__Failles {risk} du {self.yesterday.strftime('%F')}__\n")
 
 		for product in threats_by_product.keys():
 			await channel.send(product + " : \n")

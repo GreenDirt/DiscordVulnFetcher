@@ -5,9 +5,9 @@ from vuldb_api import VuldbApi
 from config import *
 
 class DiscordFormatter:
-	def __init__(self, day=datetime.now().strftime("%F").replace('-', '')):
+	def __init__(self, day=datetime.now()):
 		self.responses = {}
-		self.day = str(int(day)-1)	# Permet d'avoir la veille
+		self.day = day
 		self.vuldb_res = None
 
 	def get_vuldb(self):
@@ -42,11 +42,11 @@ class DiscordFormatter:
 			clean_res += "\n"
 
 			# CVE
-			if "source" in result.keys():
-				if "cve" in result["source"].keys():
-					if "id" in result["source"]["cve"].keys():
-						clean_res += "CVE : " + str(result["source"]["cve"]["id"])
-			clean_res += "\n"
+			try:
+				clean_res += "CVE : " + str(result["source"]["cve"]["id"])
+				clean_res += "\n"
+			except KeyError:
+				pass
 
 			# Try to determine if risk corresponds to our search
 			try:
@@ -73,8 +73,8 @@ class DiscordFormatter:
 			## Try to get id and create link with shape : https://vuldb.com/?id.{id}
 			try:
 				clean_res += "Detail link : https://vuldb.com/?id." + str(result["entry"]["id"]) + "\n"
-			except KeyError as e:
-				clean_res += "Error : " + str(e)
+			except KeyError:
+				pass
 
 			clean_res += ""
 
