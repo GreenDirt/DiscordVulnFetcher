@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from datetime import datetime
 from vuldb_api import VuldbApi
 from config import *
@@ -34,9 +36,9 @@ class DiscordFormatter:
 
 			## Start formatting for threat
 			clean_res = ""
-			clean_res += "```"
+			clean_res += ""
 			# Title
-			clean_res += "Title : " + str(result["entry"]["title"])
+			clean_res += "**Title : " + str(result["entry"]["title"]) + "**"
 			clean_res += "\n"
 
 			# CVE
@@ -68,7 +70,13 @@ class DiscordFormatter:
 				except KeyError:
 					clean_res += "Risk can't be determined\n"
 			##
-			clean_res += "```"
+			## Try to get id and create link with shape : https://vuldb.com/?id.{id}
+			try:
+				clean_res += "Detail link : https://vuldb.com/?id." + str(result["entry"]["id"]) + "\n"
+			except KeyError:
+				pass
+
+			clean_res += ""
 
 
 			# If all is OK add to returned list
@@ -83,6 +91,7 @@ class DiscordFormatter:
 						threats[PRODUCT].append(threat)
 					else:
 						threats[PRODUCT] = [threat]
+					added = True
 					break
 			if not added:	# If no product attached, add to unknown
 				threats["Unknown"].append(threat)

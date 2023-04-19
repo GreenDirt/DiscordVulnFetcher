@@ -2,7 +2,6 @@
 
 import requests
 import json
-from res_dbg import *
 from config import *
 
 class VuldbApi:
